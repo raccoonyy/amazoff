@@ -1,0 +1,3 @@
+recursive-include amazoff/static *
+recursive-include amazoff/templates *
+exclude amazoff/amazoff/settings/local.py

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}amazoff{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9"> <!-- for IE10 -->
+	<link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico" type="image/x-icon"  />
+	
+    <!-- Le styles -->
+    <link href="{{ STATIC_URL }}apps/chosen/chosen.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- This file store project specific CSS -->
+    <link href="{{ STATIC_URL }}css/project.css" rel="stylesheet">
+
+    <!-- Use this to quickly test CSS changes in a template, 
+        then move to project.css -->
+    {% block extra_css %}{% endblock extra_css %}
+  </head>
+
+  <body>
+	<div class="container">
+	
+      <header class="base">
+	    <h1 class="brand"><a href="/">amazoff</a></h1>
+	  </header>
+	  
+	  <section class="contents">
+		<h1>{% block page_title %}Example Base Template{% endblock page_title %}</h1>
+		{% block content %}
+		<p>Use this document as a way to quick start any new project.</p>
+      	{% endblock content %}
+	  </section>
+	  
+	  <aside class="base">
+	  </aside>
+	  
+	  <footer class="base">
+	  </footer>
+	  
+    </div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{{ STATIC_URL }}apps/chosen/chosen.jquery.min.js"></script>
+    <!-- place project specific Javascript in this file -->
+    <script src="{{ STATIC_URL }}js/project.js"></script>
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>
