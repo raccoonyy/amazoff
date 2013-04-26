@@ -19,6 +19,7 @@
 
     <!-- This file store project specific CSS -->
     <link href="{{ STATIC_URL }}css/project.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Use this to quickly test CSS changes in a template, 
         then move to project.css -->
@@ -27,16 +28,37 @@
 
   <body>
 	<div class="container">
-	
-      <header class="base">
-	    <h1 class="brand"><a href="/">amazoff</a></h1>
+    <header class="base">
+      <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+          <div class="container">
+            <a class="brand" href="/">Amazoff</a>
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <div class="nav-collapse collapse">
+              <ul class="nav">
+                <li>
+                  <a href="#" class="active">Home</a> 
+                </li>
+                <li>
+                  <a href="{% url 'book_search' %}">Search</a> 
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 	  </header>
 	  
 	  <section class="contents">
-		<h1>{% block page_title %}Example Base Template{% endblock page_title %}</h1>
+		<h1>
+      {% block page_title %}{% endblock page_title %}
+    </h1>
 		{% block content %}
-		<p>Use this document as a way to quick start any new project.</p>
-      	{% endblock content %}
+  	{% endblock content %}
 	  </section>
 	  
 	  <aside class="base">
@@ -51,6 +73,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="{{ STATIC_URL }}apps/chosen/chosen.jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     <!-- place project specific Javascript in this file -->
     <script src="{{ STATIC_URL }}js/project.js"></script>
     {% block extra_js %}{% endblock extra_js %}

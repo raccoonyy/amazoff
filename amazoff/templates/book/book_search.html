@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block page_title %}책 검색 / 추가{% endblock page_title %}
+{% block content %}
+<div class="books">
+  <form action="." class="form-horizontal">
+  <fieldset>
+  <legend>책을 검색합니다.</legend>
+  <div class="control-group">
+    <label class="control-label">검색</label>
+    <div class="controls">
+      <input id="q" name="q" type="text" placeholder="코드, 책제목, 출판사, 저자 이름 등" class="input-xlarge search-query">
+      <label class="checkbox" for="search_in_amazon">
+        <input type="checkbox" value="true" id="search_in_amazon" name="search_in_amazon">Amazon.com에서 검색하기</label>
+    </div>
+  </div>
+  </fieldset>
+  </form>
+  {% if books %}
+    {% include "book/searched_list.html" %}
+  {% else %}
+    <img src="{{ STATIC_URL }}img/amazon_code.png" alt="">
+  {% endif %}
+</div>
+{% endblock content %}
+{% block extra_js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/book_search.js"></script>
+{% endblock extra_js %}

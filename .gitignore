@@ -1,5 +1,6 @@
 # Python bytecode:
 *.py[co]
+*.ipynb
 
 # Packaging files:
 *.egg*
@@ -24,3 +25,5 @@ build
 
 # Local development settings:
 amazoff/amazoff/settings/local.py
+
+*.TODO

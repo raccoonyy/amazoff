@@ -189,11 +189,14 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     # Database migration helpers:
     'south',
-    'compressor'
+    'compressor',
+    'django_extensions',
+    'actstream'
 )
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    'publication',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -243,3 +246,12 @@ WSGI_APPLICATION = 'wsgi.application'
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_URL = STATIC_URL
 ########## END THIRD PARTY CONFIGURATION
+
+ACTSTREAM_SETTINGS = {
+    'MODELS': ('publication.Book', 'publication.Rank'),
+    'MANAGER': 'actstream.managers.ActionManager',
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': True,
+    'USE_JSONFIELD': False,
+    'GFK_FETCH_DEPTH': 1,
+}

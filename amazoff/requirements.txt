@@ -1,0 +1,27 @@
+Django==1.5.1
+South==0.7.6
+amazoff==0.1
+bottlenose==0.4.2
+coverage==3.6
+distribute==0.6.36
+django-activity-stream==0.4.4
+django-appconf==0.6
+django-compressor==1.3
+django-debug-toolbar==0.9.4
+django-discover-runner==0.4
+django-extensions==1.1.1
+django-nose==1.1
+django-reversion==1.7
+ipython==0.13.2
+lxml==3.1.2
+mock==1.0.1
+nose==1.3.0
+nosy==1.1.2
+pync==1.1
+-e git://github.com/yoavaviram/python-amazon-simple-product-api.git@62e021506d4e8a5715d5edf3ef601ed95d05ace3#egg=python_amazon_simple_product_api-dev
+python-dateutil==2.1
+pyzmq==13.0.2
+readline==6.2.4.1
+six==1.3.0
+tornado==3.0.1
+wsgiref==0.1.2

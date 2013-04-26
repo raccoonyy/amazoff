@@ -1,0 +1,29 @@
+<ol class="unstyled">
+  {% for book in books %}
+  <li class="well clearfix">
+    <div class="book">
+      <p class="pull-left">
+        <img class="book-image" src="{{ book.img }}">
+      </p>
+      <div class="book-info">
+        <h4 class="media-heading"><a href='{% url "book" book.pk %}'>{{ book.title }}</a></h4>
+        <p>
+        {% for author in book.author.all %}
+          {{ author.name }}
+        {% endfor %} | 
+        {% for pub in book.publisher.all %}
+          {{ pub.name }}
+        {% endfor %} | 
+        {{ book.publication_date }} | {{ book.pages }}쪽</p>
+      </div>
+      <div class="actions pull-right">
+        {% if book.pk == 0 %}
+        <a class="btn" href="">이 책 저장하기</a>
+        {% else %}
+        <span class="label label-info">이미 저장된 책</span>
+        {% endif %}
+      </div>
+    </div>
+  </li>        
+  {% endfor %}
+</ol>
