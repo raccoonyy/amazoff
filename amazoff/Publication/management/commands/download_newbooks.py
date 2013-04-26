@@ -10,7 +10,6 @@ class Command(NoArgsCommand):
 
     def handle(self, *args, **options):
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
-        # pubs = ['Addison Wesley', 'apress', 'New Riders', 'Pragmatic Bookshelf', 'manning', 'sams', 'sitepoint', 'wiley', 'o\'reilly', 'Prentice Hall Ptr']
         pubs = Publisher.objects.all()
 
         for pub in pubs:
