@@ -27,3 +27,4 @@ build
 amazoff/amazoff/settings/local.py
 
 *.TODO
+p_manage.py

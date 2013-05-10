@@ -47,16 +47,9 @@ SERVER_EMAIL = EMAIL_HOST_USER
 
 
 ########## DATABASE CONFIGURATION
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'amazoff',
-        'USER': 'amazoff',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
-}
+from os.path import expanduser
+DATABASES = {}
+execfile(expanduser('~/.amazoff_settings'))
 ########## END DATABASE CONFIGURATION
 
 
