@@ -13,12 +13,15 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os
+import os, sys
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "jajaja.settings"
+import site
+site.addsitedir('/home/raccoony/VirtualEnvs/amazoff/lib/python2.7/site-packages')
+sys.path.append('/home/www_service/amazoff/amazoff')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "amazoff.settings.production")
 
 # This application object is used by any WSGI server configured to use this

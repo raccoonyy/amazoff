@@ -47689,8 +47689,6 @@ def run():
     publication_rank_2752.book = publication_book_4
     publication_rank_2752 = save_or_locate(publication_rank_2752)
 
-    publication_rank_2752.target_actions.add(  locate_object(Action, "id", Action, "id", 19, {'actor_content_type_id': 9, 'description': None, 'timestamp': datetime.datetime(2013, 5, 8, 11, 57, 8, 222108), 'id': 19, 'actor_object_id': u'5', 'verb': u'Rank is updated', 'target_object_id': u'2752', 'action_object_content_type_id': 3, 'target_content_type_id': 13, 'public': True, 'action_object_object_id': u'5'} )  )
-
     publication_rank_2753.book = publication_book_5
     publication_rank_2753 = save_or_locate(publication_rank_2753)
 

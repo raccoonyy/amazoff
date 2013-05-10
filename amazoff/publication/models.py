@@ -191,7 +191,7 @@ class Rank(models.Model):
 
     class Meta:
         app_label = 'publication'
-        unique_together = ('date', 'book')
+        # unique_together = ('date', 'book')
         verbose_name = 'Rank'
         verbose_name_plural = 'Ranks'
 

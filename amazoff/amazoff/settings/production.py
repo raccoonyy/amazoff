@@ -10,7 +10,6 @@ from base import *  # NOQA
 # into your settings, but ImproperlyConfigured is an exception.
 from django.core.exceptions import ImproperlyConfigured
 
-
 def get_env_setting(setting):
     """ Get the environment setting or return exception """
     try:
@@ -49,7 +48,7 @@ SERVER_EMAIL = EMAIL_HOST_USER
 ########## DATABASE CONFIGURATION
 from os.path import expanduser
 DATABASES = {}
-execfile(expanduser('~/.amazoff_settings'))
+execfile(expanduser('/home/raccoony/.amazoff_settings'))
 ########## END DATABASE CONFIGURATION
 
 
@@ -65,9 +64,6 @@ CACHES = {
 
 ########## SECRET CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = get_env_setting('SECRET_KEY')
+#SECRET_KEY = get_env_setting('SECRET_KEY')
 ########## END SECRET CONFIGURATION
-
-AMAZON_ACCESS_KEY = get_env_setting('AMAZON_ACCESS_KEY')
-AMAZON_SECRET_KEY = get_env_setting('AMAZON_SECRET_KEY')
-AMAZON_ASSOC_TAG = get_env_setting('AMAZON_ASSOC_TAG')
+ALLOWED_HOSTS = ['*']
