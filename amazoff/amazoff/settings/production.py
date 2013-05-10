@@ -61,3 +61,7 @@ CACHES = {}
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
 ########## END SECRET CONFIGURATION
+
+AMAZON_ACCESS_KEY = get_env_setting('AMAZON_ACCESS_KEY')
+AMAZON_SECRET_KEY = get_env_setting('AMAZON_SECRET_KEY')
+AMAZON_ASSOC_TAG = get_env_setting('AMAZON_ASSOC_TAG')
