@@ -21,7 +21,7 @@ class Category(models.Model):
 
 
 class Author(models.Model):
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=100, null=False)
 
     class Meta:
         app_label = 'publication'
@@ -33,7 +33,7 @@ class Author(models.Model):
 
 
 class Publisher(models.Model):
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=100, null=False)
     last_updated = models.DateField(null=True, auto_now=True)
 
     class Meta:

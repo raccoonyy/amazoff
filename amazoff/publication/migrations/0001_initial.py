@@ -8,14 +8,107 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Category'
+        db.create_table(u'publication_category', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=150, null=True)),
+            ('br_id', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True)),
+        ))
+        db.send_create_signal('publication', ['Category'])
 
-        # Changing field 'Rank.rank'
-        db.alter_column(u'publication_rank', 'rank', self.gf('django.db.models.fields.IntegerField')(max_length=15))
+        # Adding model 'Author'
+        db.create_table(u'publication_author', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
+        ))
+        db.send_create_signal('publication', ['Author'])
+
+        # Adding model 'Publisher'
+        db.create_table(u'publication_publisher', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
+            ('last_updated', self.gf('django.db.models.fields.DateField')(auto_now=True, null=True, blank=True)),
+        ))
+        db.send_create_signal('publication', ['Publisher'])
+
+        # Adding model 'Book'
+        db.create_table(u'publication_book', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('create_date', self.gf('django.db.models.fields.DateField')(auto_now_add=True, null=True, blank=True)),
+            ('img', self.gf('django.db.models.fields.URLField')(max_length=200, null=True)),
+            ('isbn', self.gf('django.db.models.fields.CharField')(unique=True, max_length=13)),
+            ('mod_date', self.gf('django.db.models.fields.DateField')(auto_now=True, null=True, blank=True)),
+            ('pages', self.gf('django.db.models.fields.CharField')(max_length=4, null=True)),
+            ('publication_date', self.gf('django.db.models.fields.DateField')(null=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255, null=True)),
+        ))
+        db.send_create_signal('publication', ['Book'])
+
+        # Adding M2M table for field author on 'Book'
+        db.create_table(u'publication_book_author', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('book', models.ForeignKey(orm['publication.book'], null=False)),
+            ('author', models.ForeignKey(orm['publication.author'], null=False))
+        ))
+        db.create_unique(u'publication_book_author', ['book_id', 'author_id'])
+
+        # Adding M2M table for field category on 'Book'
+        db.create_table(u'publication_book_category', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('book', models.ForeignKey(orm['publication.book'], null=False)),
+            ('category', models.ForeignKey(orm['publication.category'], null=False))
+        ))
+        db.create_unique(u'publication_book_category', ['book_id', 'category_id'])
+
+        # Adding M2M table for field publisher on 'Book'
+        db.create_table(u'publication_book_publisher', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('book', models.ForeignKey(orm['publication.book'], null=False)),
+            ('publisher', models.ForeignKey(orm['publication.publisher'], null=False))
+        ))
+        db.create_unique(u'publication_book_publisher', ['book_id', 'publisher_id'])
+
+        # Adding model 'Rank'
+        db.create_table(u'publication_rank', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('rank', self.gf('django.db.models.fields.IntegerField')(max_length=15)),
+            ('date', self.gf('django.db.models.fields.DateField')(auto_now_add=True, blank=True)),
+            ('book', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['publication.Book'], null=True)),
+        ))
+        db.send_create_signal('publication', ['Rank'])
+
+        # Adding unique constraint on 'Rank', fields ['date', 'book']
+        db.create_unique(u'publication_rank', ['date', 'book_id'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Rank', fields ['date', 'book']
+        db.delete_unique(u'publication_rank', ['date', 'book_id'])
 
-        # Changing field 'Rank.rank'
-        db.alter_column(u'publication_rank', 'rank', self.gf('django.db.models.fields.CharField')(max_length=15))
+        # Deleting model 'Category'
+        db.delete_table(u'publication_category')
+
+        # Deleting model 'Author'
+        db.delete_table(u'publication_author')
+
+        # Deleting model 'Publisher'
+        db.delete_table(u'publication_publisher')
+
+        # Deleting model 'Book'
+        db.delete_table(u'publication_book')
+
+        # Removing M2M table for field author on 'Book'
+        db.delete_table('publication_book_author')
+
+        # Removing M2M table for field category on 'Book'
+        db.delete_table('publication_book_category')
+
+        # Removing M2M table for field publisher on 'Book'
+        db.delete_table('publication_book_publisher')
+
+        # Deleting model 'Rank'
+        db.delete_table(u'publication_rank')
+
 
     models = {
         u'actstream.action': {

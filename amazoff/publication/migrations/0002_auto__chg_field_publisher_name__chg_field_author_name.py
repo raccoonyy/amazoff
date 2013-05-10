@@ -9,13 +9,19 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Changing field 'Book.pages'
-        db.alter_column(u'publication_book', 'pages', self.gf('django.db.models.fields.CharField')(max_length=4, null=True))
+        # Changing field 'Publisher.name'
+        db.alter_column(u'publication_publisher', 'name', self.gf('django.db.models.fields.CharField')(max_length=100))
+
+        # Changing field 'Author.name'
+        db.alter_column(u'publication_author', 'name', self.gf('django.db.models.fields.CharField')(max_length=100))
 
     def backwards(self, orm):
 
-        # Changing field 'Book.pages'
-        db.alter_column(u'publication_book', 'pages', self.gf('django.db.models.fields.IntegerField')(max_length=4, null=True))
+        # Changing field 'Publisher.name'
+        db.alter_column(u'publication_publisher', 'name', self.gf('django.db.models.fields.CharField')(max_length=50))
+
+        # Changing field 'Author.name'
+        db.alter_column(u'publication_author', 'name', self.gf('django.db.models.fields.CharField')(max_length=50))
 
     models = {
         u'actstream.action': {
@@ -39,18 +45,23 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        'publication.author': {
+            'Meta': {'object_name': 'Author'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
         'publication.book': {
             'Meta': {'object_name': 'Book'},
-            'author': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
+            'author': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['publication.Author']", 'symmetrical': 'False'}),
             'category': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['publication.Category']", 'symmetrical': 'False'}),
             'create_date': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'img': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
             'isbn': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '13'}),
-            'mod_date': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'null': 'True', 'blank': 'True'}),
+            'mod_date': ('django.db.models.fields.DateField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
             'pages': ('django.db.models.fields.CharField', [], {'max_length': '4', 'null': 'True'}),
             'publication_date': ('django.db.models.fields.DateField', [], {'null': 'True'}),
-            'publisher': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True'}),
+            'publisher': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['publication.Publisher']", 'symmetrical': 'False'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'})
         },
         'publication.category': {
@@ -59,12 +70,18 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True'})
         },
+        'publication.publisher': {
+            'Meta': {'object_name': 'Publisher'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_updated': ('django.db.models.fields.DateField', [], {'auto_now': 'True', 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
         'publication.rank': {
             'Meta': {'unique_together': "(('date', 'book'),)", 'object_name': 'Rank'},
             'book': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['publication.Book']", 'null': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'rank': ('django.db.models.fields.CharField', [], {'max_length': '15'})
+            'rank': ('django.db.models.fields.IntegerField', [], {'max_length': '15'})
         }
     }
 
