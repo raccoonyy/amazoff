@@ -248,7 +248,7 @@ COMPRESS_URL = STATIC_URL
 ########## END THIRD PARTY CONFIGURATION
 
 ACTSTREAM_SETTINGS = {
-    'MODELS': ('publication.Book', 'publication.Rank'),
+    'MODELS': ('auth.user', 'auth.group', 'sites.site', 'comments.comment', 'publication.book', 'publication.rank'),
     'MANAGER': 'actstream.managers.ActionManager',
     'FETCH_RELATIONS': True,
     'USE_PREFETCH': True,

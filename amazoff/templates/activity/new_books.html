@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load activity_tags i18n %}
+
+{% block content %}
+{% load i18n %}
+<ul>
+{% for action in action_list %}
+    <li>{% include 'activity/action.html' %}</li>
+{% empty %}
+{% trans "No actions yet" %}
+{% endfor %}
+</ul>
+{% endblock %}

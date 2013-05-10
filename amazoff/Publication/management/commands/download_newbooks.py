@@ -1,6 +1,8 @@
-from django.core.management.base import NoArgsCommand
-from django.conf import settings
+from actstream import action
 from amazon.api import AmazonAPI
+from datetime import date, timedelta
+from django.conf import settings
+from django.core.management.base import NoArgsCommand
 from publication.models import *
 import time
 
@@ -10,7 +12,9 @@ class Command(NoArgsCommand):
 
     def handle(self, *args, **options):
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
-        pubs = Publisher.objects.all()
+        yesterday = date.today() - timedelta(days=1)
+        pubs = Publisher.objects.filter(last_updated__gte=yesterday)
+        # pubs = Publisher.objects.all()
 
         for pub in pubs:
             print "=== Check for publisher: \'%s\'" % pub
@@ -24,6 +28,7 @@ class Command(NoArgsCommand):
                     dbbook.update(amazon_book)
                 except Book.DoesNotExist:
                     Book.objects.create_book(amazon_book)
-            time.sleep(3)
+            pub.save()
+            time.sleep(4)
 
         print "=== Successful downloaded new books"

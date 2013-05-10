@@ -1,6 +1,9 @@
-from amazon.api import AmazonAPI
+# from amazon.api import AmazonAPI
 from django.db import models
-from django.db.models.signals import post_save
+
+# from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from actstream import action
 
 
@@ -31,6 +34,7 @@ class Author(models.Model):
 
 class Publisher(models.Model):
     name = models.CharField(max_length=50, null=False)
+    last_updated = models.DateField(null=True, auto_now=True)
 
     class Meta:
         app_label = 'publication'
@@ -45,19 +49,22 @@ class BookManager(models.Manager):
     def create_book(self, ambook):
         print "\t\'%s\' will creating." % ambook.title[:30]
 
-        book = self.trans_amazon_to_book(ambook)
+        creating_book = self.trans_amazon_to_book(ambook)
 
-        authors = book['author']
-        publisher = book['publisher']
-        del book['author']
-        del book['publisher']
+        authors = creating_book['author']
+        publisher = creating_book['publisher']
+        del creating_book['author']
+        del creating_book['publisher']
 
-        dbbook = self.create(**book)
+        dbbook = self.create(**creating_book)
         dbbook.author_add(authors)
-        dbbook.publisher_add(publisher)
+        # dbbook.publisher_add(publisher)
         dbbook.categorising(ambook)
 
-        action.send(Book, verb='%s is creating' % dbbook.title)
+        streams = User.objects.get(username='streams')
+        created_streams = User.objects.get(username='created_streams')
+        action.send(dbbook, verb='is creating',
+            target=streams, action_object=created_streams)
 
     def trans_amazon_to_book(self, amazon_book):
         book = {}
@@ -77,7 +84,7 @@ class Book(models.Model):
     create_date = models.DateField(null=True, auto_now_add=True)
     img = models.URLField(max_length=200, null=True)
     isbn = models.CharField(max_length=13, null=False, unique=True)
-    mod_date = models.DateField(null=True, auto_now_add=True)
+    mod_date = models.DateField(null=True, auto_now=True)
     pages = models.CharField(max_length=4, null=True)
     publication_date = models.DateField(null=True)
     publisher = models.ManyToManyField(Publisher)
@@ -90,9 +97,7 @@ class Book(models.Model):
         verbose_name_plural = 'Books'
 
     def author_add(self, authors):
-        for author in self.author.all():
-            author.delete()
-
+        print "%s's author adding" % self.isbn
         for name in authors:
             author, created = Author.objects.get_or_create(
                 name=name
@@ -100,6 +105,7 @@ class Book(models.Model):
             self.author.add(author)
 
     def publisher_add(self, name):
+        print "%s's publisher adding" % self.isbn
         pub, created = Publisher.objects.get_or_create(
             name=name
         )
@@ -116,22 +122,30 @@ class Book(models.Model):
 
     def update(self, amazon_book):
         diff = self.diff_with_amazon_book(amazon_book)
-        book = Book.objects.trans_amazon_to_book(amazon_book)
+
         if diff:
             pass
         else:
             return
 
+        updated_book = Book.objects.trans_amazon_to_book(amazon_book)
+        streams = User.objects.get(username='streams')
+        updated_streams = User.objects.get(username='updated_streams')
         for d in diff:
             if d == 'author':
-                self.author_add(book['author'])
+                for author in self.author.all():
+                    author.delete()
+                self.author_add(updated_book['author'])
                 continue
             if d == 'publisher':
-                self.publisher_add(book['publisher'])
+                # self.publisher_add(updated_book['publisher'])
                 continue
 
-            action.send(Book, verb='%s of %s is updated \'%s => %s\'' % (d, self.title, getattr(self, d), book[d]))
-            setattr(self, d, book[d])
+            action.send(self, verb='is updated',
+                target=streams, action_object=updated_streams,
+                comment='\'%s => %s\'' % (getattr(self, d), updated_book[d]))
+
+            setattr(self, d, updated_book[d])
         print "  = %s \'%s\' is updated." % (self.isbn, diff)
         self.save()
 
@@ -156,19 +170,22 @@ class Book(models.Model):
             diff.append('publication_date')
         if self.title != book['title']:
             diff.append('title')
-        if publisher != book['publisher']:
-            diff.append('publisher')
+        # if publisher != book['publisher']:
+            # diff.append('publisher')
         if len(diff) > 0:
             return diff
         else:
             return False
 
+    def get_absolute_url(self):
+        return reverse('book', args=[self.pk])
+
     def __unicode__(self):
-        return '%s' % self.title[:30]
+        return '%s' % self.title[:45]
 
 
 class Rank(models.Model):
-    rank = models.CharField(max_length=15, null=False)
+    rank = models.IntegerField(max_length=15, null=False)
     date = models.DateField(auto_now_add=True)
     book = models.ForeignKey(Book, null=True)
 

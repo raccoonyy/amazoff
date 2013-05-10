@@ -2,28 +2,98 @@
 import re
 
 from actstream.models import action_object_stream
+from actstream.models import model_stream
 from amazon.api import AmazonAPI
+from datetime import date, timedelta
 from django.conf import settings
-from django.db.models import Q
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, Http404
-from django.http import HttpResponseRedirect
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.shortcuts import render
-from django.template import Context
-from django.template.loader import get_template
 from publication.models import *
 from publication.views import *
-from actstream.models import model_stream
+
+
+# def main(request):
+#     variables = {
+#         'user': request.user,
+#         'books': Book.objects.filter(rank__rank__lte=10000)[:30]
+#     }
+#     return render(request, 'main.html', variables)
 
 
 def main(request):
+    """
+    ``User`` focused activity stream.
+    """
+
+    return redirect('/books/')
+
+
+def books(request):
+    return render(request, 'book/book_search.html', {'books': Book.objects.order_by('-mod_date')[:100]})
+
+
+def new_books(request, delta=0):
+    delta = int(delta)
+    days_ago = date.today() - timedelta(days=delta)
+    ctype = ContentType.objects.get_for_model(User)
+    actor = request.user
+    created_streams = User.objects.get(username='created_streams')
+    action_list = action_object_stream(created_streams, timestamp__gte=days_ago)
+
     variables = {
-        'user': request.user,
-        'books': Book.objects.order_by('-mod_date')
+        'ctype': ctype,
+        'actor': actor,
+        'action_list': action_list,
+        'days_ago': days_ago,
     }
-    return render(request, 'main.html', variables)
+
+    return render(request, 'activity/new_books.html', variables)
+
+
+def updated_books(request, delta=0):
+    delta = int(delta)
+    days_ago = date.today() - timedelta(days=delta)
+    ctype = ContentType.objects.get_for_model(User)
+    actor = request.user
+    updated_streams = User.objects.get(username='updated_streams')
+    action_list = action_object_stream(updated_streams, timestamp__gte=days_ago)
+
+    variables = {
+        'ctype': ctype,
+        'actor': actor,
+        'action_list': action_list,
+        'days_ago': days_ago,
+    }
+
+    return render(request, 'activity/updated_books.html', variables)
+
+
+def ranked_books(request, delta=0, rank_range=10000):
+    delta = int(delta)
+    days_ago = date.today() - timedelta(days=delta)
+
+    action_list = []
+    for r in Rank.objects.filter(rank__lte=rank_range).order_by('rank'):
+        if r.target_actions.exists() and r.target_actions.get().timestamp.date() >= days_ago:
+            action_list.append(r.target_actions.get())
+    # action_list = [action for action in model_stream(Rank) if action.target.rank < range]
+    ctype = ContentType.objects.get_for_model(User)
+    actor = request.user
+
+    variables = {
+        'ctype': ctype,
+        'actor': actor,
+        'action_list': action_list,
+        'days_ago': days_ago,
+        'range': rank_range
+    }
+
+    return render(request, 'activity/ranked_books.html', variables)
 
 
 def book_search(request):
@@ -56,7 +126,7 @@ def book_search_in_amazon(request):
 
         books = []
         for amazon_book in amazon_books:
-            book = Book.objects.trans_from_amazon_book(amazon_book)
+            book = Book.objects.trans_amazon_to_book(amazon_book)
             b = Book.objects.filter(isbn=amazon_book.isbn)
             if len(b) > 0:
                 book['pk'] = b[0].pk

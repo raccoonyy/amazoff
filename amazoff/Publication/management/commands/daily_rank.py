@@ -1,4 +1,6 @@
 import datetime
+import time
+from datetime import date, timedelta
 from django.core.management.base import NoArgsCommand
 from django.conf import settings
 from amazon.api import AmazonAPI
@@ -11,12 +13,15 @@ class Command(NoArgsCommand):
 
     def handle(self, *args, **options):
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
+        # yesterday = date.today() - timedelta(days=1)
 
+        # isbns = [book.isbn for book in Book.objects.filter(mod_date__gte=yesterday)]
         isbns = [book.isbn for book in Book.objects.all()]
         grouped_isbns = map(None, *[iter(isbns)]*10)
 
         print "=== Start daily rank update."
         for index, isbns in enumerate(grouped_isbns):
+            time.sleep(4)
             isbns = filter(None, isbns)
             isbns = ",".join(isbns)
 
@@ -27,14 +32,27 @@ class Command(NoArgsCommand):
                 if item.item.__dict__.get('SalesRank') is None:
                     continue
                 dbbook = Book.objects.get(isbn__exact=item.isbn)
-                r, create = Rank.objects.get_or_create(
+
+                try:
+                    r = Rank.objects.get(date=datetime.date.today(), book=dbbook)
+                    continue
+                except:
+                    pass
+
+                print "  = daily rank added for %s" % dbbook
+                r = Rank.objects.create(
                     date=datetime.date.today(),
-                    book=dbbook
+                    book=dbbook,
+                    rank=item.item.SalesRank
                 )
-                if create:
-                    print "  = daily rank added for %s" % dbbook
-                    r.rank = str(item.item.SalesRank)
-                    r.save()
-                    action.send(Rank, verb='Rank of %s is updated \'%s => %s\'' % (dbbook.title, dbbook.rank_set.latest('date').rank, r.rank))
+
+                from django.contrib.auth.models import User
+                streams = User.objects.get(username='streams')
+                ranked_streams = User.objects.get(username='ranked_streams')
+
+                action.send(dbbook, verb='Rank is updated',
+                    action_object=ranked_streams,
+                    target=r,
+                    comment='new rank is %s\'' % r.rank)
 
         print "=== Successful updated all ranks"
