@@ -54,11 +54,10 @@ class BookManager(models.Manager):
         authors = creating_book['author']
         publisher = creating_book['publisher']
         del creating_book['author']
-        del creating_book['publisher']
 
         dbbook = self.create(**creating_book)
         dbbook.author_add(authors)
-        # dbbook.publisher_add(publisher)
+        dbbook.publisher_add(publisher)
         dbbook.categorising(ambook)
 
         streams = User.objects.get(username='streams')
@@ -104,11 +103,18 @@ class Book(models.Model):
 
     def author_add(self, authors):
         print "%s's author adding" % self.isbn
+        if type(authors) == str:
+            author, created = Author.objects.get_or_create(
+                name=authors
+            )
+            self.author.add(author)
+            return None
         for name in authors:
             author, created = Author.objects.get_or_create(
                 name=name
             )
             self.author.add(author)
+        return None
 
     def publisher_add(self, name):
         print "%s's publisher adding" % self.isbn
