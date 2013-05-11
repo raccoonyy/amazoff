@@ -4,7 +4,9 @@
 {% block content %}
 <ul>
 {% for action in action_list %}
-    <li>{% include 'activity/action.html' %}</li>
+    {% with book=action.actor %}
+        {% include 'book/_updated_book.html' %}
+    {% endwith %}
 {% empty %}
 {% trans "No actions yet" %}
 {% endfor %}

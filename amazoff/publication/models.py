@@ -96,6 +96,12 @@ class Book(models.Model):
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
 
+    def get_absolute_url(self):
+        return reverse('book', args=[self.pk])
+
+    def __unicode__(self):
+        return '%s' % self.title[:45]
+
     def author_add(self, authors):
         print "%s's author adding" % self.isbn
         for name in authors:
@@ -141,11 +147,11 @@ class Book(models.Model):
                 # self.publisher_add(updated_book['publisher'])
                 continue
 
-            action.send(self, verb='is updated',
-                target=streams, action_object=updated_streams,
-                comment='\'%s => %s\'' % (getattr(self, d), updated_book[d]))
-
             setattr(self, d, updated_book[d])
+
+        action.send(self, verb='%s' % diff,
+            target=streams, action_object=updated_streams)
+
         print "  = %s \'%s\' is updated." % (self.isbn, diff)
         self.save()
 
@@ -177,11 +183,14 @@ class Book(models.Model):
         else:
             return False
 
-    def get_absolute_url(self):
-        return reverse('book', args=[self.pk])
+    def exists_rank(self):
+        if self.rank_set.exists():
+            return True
+        else:
+            return False
 
-    def __unicode__(self):
-        return '%s' % self.title[:45]
+    def highest_rank(self):
+        return self.rank_set.order_by('rank')[0]
 
 
 class Rank(models.Model):

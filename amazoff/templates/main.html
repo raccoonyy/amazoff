@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 {% block page_title %}저장된 책 목록{% endblock page_title %}
 {% block content %}
-{% for book in books %}
-   <p>
-     [<a href="">{% for pub in book.publisher.all %}
-          {{ pub.name }}
-        {% endfor %}</a>]
-     <a href="{% url "book" book.pk %}">{{ book.title|truncatechars:50 }}</a>
-      / <a href="">{% for author in book.author.all %}
-          {{ author.name }}
-        {% endfor %}</a>
-   </p>
-{% endfor %}
+{% include 'book/_book_list.html' %}
 {% endblock content %}

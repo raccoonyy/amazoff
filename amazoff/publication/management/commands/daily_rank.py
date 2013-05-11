@@ -47,12 +47,10 @@ class Command(NoArgsCommand):
                 )
 
                 from django.contrib.auth.models import User
-                streams = User.objects.get(username='streams')
+                # streams = User.objects.get(username='streams')
                 ranked_streams = User.objects.get(username='ranked_streams')
 
-                action.send(dbbook, verb='Rank is updated',
-                    action_object=ranked_streams,
-                    target=r,
-                    comment='new rank is %s\'' % r.rank)
+                action.send(dbbook, verb='new rank is %s\'' % r.rank,
+                    action_object=ranked_streams, target=r)
 
         print "=== Successful updated all ranks"

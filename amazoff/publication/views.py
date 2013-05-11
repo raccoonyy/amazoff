@@ -34,10 +34,10 @@ def main(request):
 
 
 def books(request):
-    return render(request, 'book/book_search.html', {'books': Book.objects.order_by('-mod_date')[:100]})
+    return render(request, 'main.html', {'books': Book.objects.order_by('-create_date')[:100]})
 
 
-def new_books(request, delta=0):
+def new_books(request, delta=1):
     delta = int(delta)
     days_ago = date.today() - timedelta(days=delta)
     ctype = ContentType.objects.get_for_model(User)
@@ -52,10 +52,10 @@ def new_books(request, delta=0):
         'days_ago': days_ago,
     }
 
-    return render(request, 'activity/new_books.html', variables)
+    return render(request, 'activity/new_actions.html', variables)
 
 
-def updated_books(request, delta=0):
+def updated_books(request, delta=1):
     delta = int(delta)
     days_ago = date.today() - timedelta(days=delta)
     ctype = ContentType.objects.get_for_model(User)
@@ -70,10 +70,10 @@ def updated_books(request, delta=0):
         'days_ago': days_ago,
     }
 
-    return render(request, 'activity/updated_books.html', variables)
+    return render(request, 'activity/updated_actions.html', variables)
 
 
-def ranked_books(request, delta=0, rank_range=10000):
+def ranked_books(request, delta=1, rank_range=10000):
     delta = int(delta)
     days_ago = date.today() - timedelta(days=delta)
 
@@ -93,7 +93,7 @@ def ranked_books(request, delta=0, rank_range=10000):
         'range': rank_range
     }
 
-    return render(request, 'activity/ranked_books.html', variables)
+    return render(request, 'activity/ranked_actions.html', variables)
 
 
 def book_search(request):

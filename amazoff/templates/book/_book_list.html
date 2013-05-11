@@ -1,0 +1,10 @@
+{% load endless %}
+{% load static %}
+
+{% paginate books %}
+<ul class="unstyled">
+  {% for book in books %}
+    {% include "book/_book.html" %}    
+  {% endfor %}
+</ul>
+{% show_pages %}
