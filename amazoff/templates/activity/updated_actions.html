@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load activity_tags i18n %}
+{% load endless %}
 
 {% block content %}
 <ul>
+{% paginate action_list %}
 {% for action in action_list %}
     {% with book=action.actor %}
         {% include 'book/_updated_book.html' %}
@@ -11,4 +13,5 @@
 {% trans "No actions yet" %}
 {% endfor %}
 </ul>
+{% show_pages %}
 {% endblock %}
