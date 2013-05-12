@@ -135,6 +135,7 @@ def book_search_in_amazon(request):
 
         variables = {
             'books': books,
+            'search_in_amazon': True
         }
     return variables
 

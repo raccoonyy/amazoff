@@ -12,7 +12,8 @@
     </p>
     <div class="book-info">
       <h4 class="media-heading"><a href='{% url "book" book.pk %}'>{{ book.title }}</a></h4>
-      <p>{% for author in book.author %}
+      <p>
+        {% for author in book.author %}
         {% if forloop.last %}
           {{ author }}
         {% else %}

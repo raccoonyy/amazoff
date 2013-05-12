@@ -67,7 +67,7 @@ class BookManager(models.Manager):
 
     def trans_amazon_to_book(self, amazon_book):
         book = {}
-        book['author'] = amazon_book.author
+        book['author'] = amazon_book.authors
         book['img'] = amazon_book.medium_image_url
         book['isbn'] = amazon_book.isbn
         book['pages'] = str(amazon_book.pages)

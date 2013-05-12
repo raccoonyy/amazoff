@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block page_title %}책 검색 / 추가{% endblock page_title %}
+{% block page_title %}책 검색{% endblock page_title %}
 {% block content %}
 <div class="books">
   <form action="." class="form-horizontal">
@@ -21,7 +21,7 @@
     <ol class="unstyled">
       {% paginate books %}
       {% for book in books %}
-        {% if search_in_amazon == true %}
+        {% if search_in_amazon %}
           {% include "book/_amazon_book.html" %}
         {% else %}
           {% include "book/_searched_book.html" %}
