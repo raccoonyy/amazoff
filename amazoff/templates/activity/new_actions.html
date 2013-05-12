@@ -20,10 +20,10 @@
 {% paginate action_list %}
 {% for action in action_list %}
     {% with book=action.actor %}
-        {% include 'book/_book.html' %}
+        {% include 'book/_saved_book.html' %}
     {% endwith %}
 {% empty %}
-{% trans "No actions yet" %}
+{% trans "No books" %}
 {% endfor %}
 </ul>
 {% show_pages %}

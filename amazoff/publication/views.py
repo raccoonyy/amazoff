@@ -97,6 +97,7 @@ def ranked_books(request, delta=30, rank_range=10000):
 def book_search(request):
     if ('search_in_amazon' in request.GET) and (request.GET['search_in_amazon'] == u'true'):
         variables = book_search_in_amazon(request)
+        return render(request, 'book/book_search.html', variables)
 
     if ('q' in request.GET) and (request.GET['q'] is not '') and request.GET['q'].strip():
         query_string = request.GET['q']
@@ -120,7 +121,7 @@ def book_search_in_amazon(request):
         query_string = request.GET['q']
 
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
-        amazon_books = amazon.search_n(10, Keywords=query_string, SearchIndex='Books', BrowseNode='5', Sort='daterank')
+        amazon_books = amazon.search_n(20, Keywords=query_string, SearchIndex='Books', BrowseNode='5', Sort='daterank')
 
         books = []
         for amazon_book in amazon_books:

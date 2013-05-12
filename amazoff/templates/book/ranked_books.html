@@ -3,10 +3,10 @@
 {% load endless %}
 
 {% block content %}
-<ul>
 {% paginate books %}
+<ul>
 {% for book in books %}
-    {% include 'book/_book.html' %}
+    {% include 'book/_saved_book.html' %}
 {% endfor %}
 </ul>
 {% show_pages %}
