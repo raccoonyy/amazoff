@@ -49,7 +49,7 @@ def new_books(request, delta=1):
         'ctype': ctype,
         'actor': actor,
         'action_list': action_list,
-        'days_ago': days_ago,
+        'delta': delta,
     }
 
     return render(request, 'activity/new_actions.html', variables)
@@ -73,27 +73,25 @@ def updated_books(request, delta=1):
     return render(request, 'activity/updated_actions.html', variables)
 
 
-def ranked_books(request, delta=1, rank_range=10000):
+def ranked_books(request, delta=30, rank_range=10000):
     delta = int(delta)
     days_ago = date.today() - timedelta(days=delta)
 
-    action_list = []
-    for r in Rank.objects.filter(rank__lte=rank_range).order_by('rank'):
-        if r.target_actions.exists() and r.target_actions.get().timestamp.date() >= days_ago:
-            action_list.append(r.target_actions.get())
-    # action_list = [action for action in model_stream(Rank) if action.target.rank < range]
-    ctype = ContentType.objects.get_for_model(User)
-    actor = request.user
+    # for r in Rank.objects.filter(rank__lte=rank_range).order_by('rank'):
+    #     if r.target_actions.exists() and r.target_actions.get().timestamp.date() >= days_ago:
+    #         action_list.append(r.target_actions.get())
+    # # action_list = [action for action in model_stream(Rank) if action.target.rank < range]
+    # ctype = ContentType.objects.get_for_model(User)
+    # actor = request.user
 
+    from django.db.models import Min, Count
     variables = {
-        'ctype': ctype,
-        'actor': actor,
-        'action_list': action_list,
+        'books': Book.objects.annotate(rank_count=Count('rank')).filter(rank_count__gte=1).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
         'days_ago': days_ago,
         'range': rank_range
     }
 
-    return render(request, 'activity/ranked_actions.html', variables)
+    return render(request, 'book/ranked_books.html', variables)
 
 
 def book_search(request):

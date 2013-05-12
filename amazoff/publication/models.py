@@ -189,14 +189,19 @@ class Book(models.Model):
         else:
             return False
 
+    @property
     def exists_rank(self):
         if self.rank_set.exists():
             return True
         else:
             return False
 
+    @property
     def highest_rank(self):
-        return self.rank_set.order_by('rank')[0]
+        if self.exists_rank:
+            return self.rank_set.order_by('rank')[0]
+        else:
+            return False
 
 
 class Rank(models.Model):
@@ -209,6 +214,7 @@ class Rank(models.Model):
         # unique_together = ('date', 'book')
         verbose_name = 'Rank'
         verbose_name_plural = 'Ranks'
+        ordering = ["rank"]
 
     def __unicode__(self):
         return '%s (%s)' % (str(self.rank), self.date)

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load activity_tags i18n %}
+{% load endless %}
+
+{% block content %}
+<ul>
+{% paginate books %}
+{% for book in books %}
+    {% include 'book/_book.html' %}
+{% endfor %}
+</ul>
+{% show_pages %}
+{% endblock %}

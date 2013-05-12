@@ -1,8 +1,20 @@
 {% extends 'base.html' %}
 {% load activity_tags i18n %}
 {% load endless %}
+{% load static %}
 
 {% block content %}
+<ul class="nav nav-pills">
+  <li {% if delta == 1 %}
+    class="active"    
+  {% endif %}
+  >
+    <a href="{% url 'new_books' delta %}">1일 동안</a>
+  </li>
+  <li><a href="{% url 'new_books' 3 %}">3일 동안</a></li>
+  <li><a href="{% url 'new_books' 5 %}">5일 동안</a></li>
+  <li><a href="{% url 'new_books' 7 %}">일주일 동안</a></li>
+</ul>
 {% load i18n %}
 <ul>
 {% paginate action_list %}
