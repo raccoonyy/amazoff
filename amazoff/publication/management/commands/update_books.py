@@ -13,8 +13,8 @@ class Command(NoArgsCommand):
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
         two_days_ago = date.today() - timedelta(days=2)
 
-        isbns = [book.isbn for book in Book.objects.filter(mod_date__gte=two_days_ago)]
-        # isbns = [book.isbn for book in Book.objects.all()]
+        # isbns = [book.isbn for book in Book.objects.filter(mod_date__gte=two_days_ago)]
+        isbns = [book.isbn for book in Book.objects.all()]
         grouped_isbns = map(None, *[iter(isbns)]*10)
 
         print "=== Start daily book update."

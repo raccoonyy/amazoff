@@ -2,7 +2,29 @@
 {% load activity_tags i18n %}
 {% load endless %}
 
+{% block page_title %}최고 랭킹 순위{% endblock page_title %}
 {% block content %}
+<!-- <ul class="nav nav-pills">
+  <li {% if delta == 3 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'ranked_books' 3 %}">3일 동안</a></li>
+  <li {% if delta == 7 %}
+    class="active"    
+  {% endif %}
+  >
+    <a href="{% url 'ranked_books' 7 %}">7일 동안</a>
+  </li>
+  <li {% if delta == 14 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'ranked_books' 14 %}">14일 동안</a></li>
+  <li {% if delta == 30 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'ranked_books' 30 %}">30일 동안</a></li>
+</ul> -->
+
 {% paginate books %}
 <ul>
 {% for book in books %}

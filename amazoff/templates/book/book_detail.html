@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block page_title %}{{ book.title }}{% endblock page_title %}
 {% block content %}
 <ul class="clearfix">
@@ -8,10 +10,16 @@
 </ul>
 <div class="book">
   <p class="pull-left">
-    <img class="book-image" src="{{ book.img }}">
+    <img class="book-image" src="
+      {% if book.img %}
+        {{ book.img }}
+      {% else %}
+        {% static 'img/book.png' %}
+      {% endif %}
+      ">
   </p>
   <div class="book-info">
-    <h4 class="media-heading">{{ book.title }}</h4>
+    <h4 class="media-heading">{{ book.title }} <small>(<a href="{{ book.amazon_link }}" target="_blank">아마존 링크</a>)</small></h4>
     <p>{% for author in book.author.all %}
         {{ author.name }}
        {% endfor %}

@@ -101,6 +101,24 @@ class Book(models.Model):
     def __unicode__(self):
         return '%s' % self.title[:45]
 
+    @property
+    def exists_rank(self):
+        if self.rank_set.exists():
+            return True
+        else:
+            return False
+
+    @property
+    def highest_rank(self):
+        if self.exists_rank:
+            return self.rank_set.order_by('rank')[0]
+        else:
+            return False
+
+    @property
+    def amazon_link(self):
+        return "http://amazon.com/dp/" + self.isbn
+
     def author_add(self, authors):
         print "%s's author adding" % self.isbn
         if type(authors) == str:
@@ -150,9 +168,8 @@ class Book(models.Model):
                 self.author_add(updated_book['author'])
                 continue
             if d == 'publisher':
-                # self.publisher_add(updated_book['publisher'])
+                self.publisher_add(updated_book['publisher'])
                 continue
-
             setattr(self, d, updated_book[d])
 
         action.send(self, verb='%s' % diff,
@@ -182,24 +199,10 @@ class Book(models.Model):
             diff.append('publication_date')
         if self.title != book['title']:
             diff.append('title')
-        # if publisher != book['publisher']:
-            # diff.append('publisher')
+        if publisher != book['publisher']:
+            diff.append('publisher')
         if len(diff) > 0:
             return diff
-        else:
-            return False
-
-    @property
-    def exists_rank(self):
-        if self.rank_set.exists():
-            return True
-        else:
-            return False
-
-    @property
-    def highest_rank(self):
-        if self.exists_rank:
-            return self.rank_set.order_by('rank')[0]
         else:
             return False
 

@@ -3,18 +3,29 @@
 {% load endless %}
 {% load static %}
 
+{% block page_title %}새로 등록된 책{% endblock page_title %}
 {% block content %}
 <ul class="nav nav-pills">
   <li {% if delta == 1 %}
     class="active"    
   {% endif %}
   >
-    <a href="{% url 'new_books' delta %}">1일 동안</a>
+    <a href="{% url 'new_books' 1 %}">1일 동안</a>
   </li>
-  <li><a href="{% url 'new_books' 3 %}">3일 동안</a></li>
-  <li><a href="{% url 'new_books' 5 %}">5일 동안</a></li>
-  <li><a href="{% url 'new_books' 7 %}">일주일 동안</a></li>
+  <li {% if delta == 3 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'new_books' 3 %}">3일 동안</a></li>
+  <li {% if delta == 5 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'new_books' 5 %}">5일 동안</a></li>
+  <li {% if delta == 7 %}
+    class="active"    
+  {% endif %}
+  ><a href="{% url 'new_books' 7 %}">일주일 동안</a></li>
 </ul>
+
 {% load i18n %}
 <ul>
 {% paginate action_list %}

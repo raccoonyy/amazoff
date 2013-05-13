@@ -73,7 +73,7 @@ def updated_books(request, delta=1):
     return render(request, 'activity/updated_actions.html', variables)
 
 
-def ranked_books(request, delta=30, rank_range=10000):
+def ranked_books(request, delta=7, rank_range=10000):
     delta = int(delta)
     days_ago = date.today() - timedelta(days=delta)
 
@@ -88,7 +88,8 @@ def ranked_books(request, delta=30, rank_range=10000):
     variables = {
         'books': Book.objects.annotate(rank_count=Count('rank')).filter(rank_count__gte=1).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
         'days_ago': days_ago,
-        'range': rank_range
+        'range': rank_range,
+        'delta': delta
     }
 
     return render(request, 'book/ranked_books.html', variables)
