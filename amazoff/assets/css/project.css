@@ -2,7 +2,22 @@
 /*! project specific CSS goes here. */
 .contents {
     margin-top: 60px;
+    margin-bottom: 160px;
 }
 .book-image {
     margin-right: 20px;
+}
+
+.endless_page_link, .endless_page_current, .endless_separator {
+    float: left;
+    padding: 4px 12px;
+    line-height: 20px;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-left-width: 0;
+}
+.endless_page_current {
+    color: #999;
+    cursor: default;
 }
