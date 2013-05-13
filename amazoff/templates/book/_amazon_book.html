@@ -11,7 +11,7 @@
       ">
     </p>
     <div class="book-info">
-      <h4 class="media-heading"><a href='{% url "book" book.pk %}'>{{ book.title }}</a></h4>
+      <h4 class="media-heading">{{ book.title }} <small>(<a href="http://amazon.com/dp/{{ book.isbn }}">아마존 링크</a>)</small></h4>
       <p>
         {% for author in book.author %}
         {% if forloop.last %}
