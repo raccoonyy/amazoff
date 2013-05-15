@@ -13,12 +13,12 @@ class Command(NoArgsCommand):
     def handle(self, *args, **options):
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
         yesterday = date.today() - timedelta(days=1)
-        pubs = Publisher.objects.filter(last_updated__gte=yesterday)
-        # pubs = Publisher.objects.all()
+        # pubs = Publisher.objects.filter(last_updated__gte=yesterday)
+        pubs = Publisher.objects.all()
 
         for pub in pubs:
             print "=== Check for publisher: \'%s\'" % pub
-            amazon_books = amazon.search_n(150, SearchIndex='Books', Publisher=pub, BrowseNode='5', Power='pubdate:after 2012', Sort='daterank')
+            amazon_books = amazon.search_n(30, SearchIndex='Books', Publisher=pub, BrowseNode='5', Power='pubdate:after 2012', Sort='daterank')
 
             for amazon_book in amazon_books:
                 if amazon_book.isbn is None:
