@@ -27,6 +27,7 @@ urlpatterns = patterns(
     url(r'^books/ranked/$', ranked_books, name='ranked_books'),
     url(r'^books/ranked/in_(?P<delta>\d+)days/$', ranked_books, name='ranked_books'),
     url(r'^books/ranked/in_(?P<delta>\d+)days/(?P<rank_range>\d+)/$', ranked_books, name='ranked_books'),
+    url(r'^book/add/(?P<isbn>\d{9}[\d|X])/$', add_book, name='add_book'),
     url(r'^book/search/$', book_search, name='book_search'),
 
     ('^activity/', include('actstream.urls')),

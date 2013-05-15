@@ -54,6 +54,7 @@ class BookManager(models.Manager):
         authors = creating_book['author']
         publisher = creating_book['publisher']
         del creating_book['author']
+        del creating_book['publisher']
 
         dbbook = self.create(**creating_book)
         dbbook.author_add(authors)

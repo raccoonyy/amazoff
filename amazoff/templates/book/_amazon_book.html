@@ -11,7 +11,11 @@
       ">
     </p>
     <div class="book-info">
-      <h4 class="media-heading">{{ book.title }} <small>(<a href="http://amazon.com/dp/{{ book.isbn }}">아마존 링크</a>)</small></h4>
+      {% if book.pk != 0 %}
+        <h4 class="media-heading"><a href="{% url "book" book.pk %}">{{ book.title }}</a> <small>(<a href="http://amazon.com/dp/{{ book.isbn }}">아마존 링크</a>)</small></h4>
+      {% else %}
+        <h4 class="media-heading">{{ book.title }} <small>(<a href="http://amazon.com/dp/{{ book.isbn }}">아마존 링크</a>)</small></h4>
+      {% endif %}
       <p>
         {% for author in book.author %}
         {% if forloop.last %}
@@ -24,6 +28,11 @@
       {{ book.publication_date }} | {{ book.pages }}쪽 |
       {{ book.isbn }}</p>
     </div>
-    {# <a class="btn" href="">이 책 저장하기</a> #}
+    <div class="pull-right">
+      {% if book.pk != 0 %}
+        <span class="label">이미 저장된 책입니다</span>      
+      {% else %}
+        <a class="btn" href="{% url "add_book" book.isbn %}">이 책 저장하기</a>
+      {% endif %}</div>
   </div>
 </li>

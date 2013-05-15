@@ -1,9 +1,0 @@
-{% load endless %}
-
-{% paginate books %}
-<ol class="unstyled">
-  {% for book in books %}
-    {% include "book/_searched_book.html" %}   
-  {% endfor %}
-</ol>
-{% show_pages %}

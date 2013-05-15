@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -93,6 +94,13 @@ def ranked_books(request, delta=7, rank_range=10000):
     }
 
     return render(request, 'book/ranked_books.html', variables)
+
+
+def add_book(request, isbn):
+    amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
+    amazon_book = amazon.lookup(ItemId=isbn)
+    Book.objects.create_book(amazon_book)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', ''))
 
 
 def book_search(request):
