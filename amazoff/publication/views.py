@@ -2,16 +2,18 @@
 import re
 
 from actstream.models import action_object_stream
-from actstream.models import model_stream
+# from actstream.models import model_stream
 from amazon.api import AmazonAPI
 from datetime import date, timedelta
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.db.models import Min, Count
 from django.db.models import Q
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from publication.models import *
@@ -74,9 +76,9 @@ def updated_books(request, delta=1):
     return render(request, 'activity/updated_actions.html', variables)
 
 
-def ranked_books(request, delta=7, rank_range=10000):
-    delta = int(delta)
-    days_ago = date.today() - timedelta(days=delta)
+def ranked_books(request, order_by='today'):
+    # delta = int(delta)
+    # days_ago = date.today() - timedelta(days=delta)
 
     # for r in Rank.objects.filter(rank__lte=rank_range).order_by('rank'):
     #     if r.target_actions.exists() and r.target_actions.get().timestamp.date() >= days_ago:
@@ -84,23 +86,25 @@ def ranked_books(request, delta=7, rank_range=10000):
     # # action_list = [action for action in model_stream(Rank) if action.target.rank < range]
     # ctype = ContentType.objects.get_for_model(User)
     # actor = request.user
-
-    from django.db.models import Min, Count
-    variables = {
-        'books': Book.objects.annotate(rank_count=Count('rank')).filter(rank_count__gte=1).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
-        'days_ago': days_ago,
-        'range': rank_range,
-        'delta': delta
-    }
-
-    return render(request, 'book/ranked_books.html', variables)
+    if order_by == 'today':
+        return render(request, 'book/ranked_books.html', {
+            'books': Book.objects.filter(rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
+        })
+    else:
+        return render(request, 'book/ranked_books.html', {
+            'books': Book.objects.filter(rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
+        })
 
 
 def add_book(request, isbn):
     amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
     amazon_book = amazon.lookup(ItemId=isbn)
     Book.objects.create_book(amazon_book)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', ''))
+
+    if request.is_ajax():
+        return HttpResponse(status=200)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', ''))
 
 
 def book_search(request):
@@ -134,6 +138,8 @@ def book_search_in_amazon(request):
 
         books = []
         for amazon_book in amazon_books:
+            if amazon_book.isbn is None:
+                continue
             book = Book.objects.trans_amazon_to_book(amazon_book)
             b = Book.objects.filter(isbn=amazon_book.isbn)
             if len(b) > 0:

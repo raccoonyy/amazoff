@@ -32,7 +32,7 @@
       {% if book.pk != 0 %}
         <span class="label">이미 저장된 책입니다</span>      
       {% else %}
-        <a class="btn" href="{% url "add_book" book.isbn %}">이 책 저장하기</a>
+        <a class="btn add_book" href="{% url "add_book" book.isbn %}" data-isbn="{{ book.isbn }}">이 책 저장하기</a>
       {% endif %}</div>
   </div>
 </li>
