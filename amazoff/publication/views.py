@@ -76,7 +76,7 @@ def updated_books(request, delta=1):
     return render(request, 'activity/updated_actions.html', variables)
 
 
-def ranked_books(request, order_by='today'):
+def ranked_books(request, day='all'):
     # delta = int(delta)
     # days_ago = date.today() - timedelta(days=delta)
 
@@ -86,14 +86,20 @@ def ranked_books(request, order_by='today'):
     # # action_list = [action for action in model_stream(Rank) if action.target.rank < range]
     # ctype = ContentType.objects.get_for_model(User)
     # actor = request.user
-    if order_by == 'today':
-        return render(request, 'book/ranked_books.html', {
+    if day == 'all':
+        return render(request, 'book/ranked_all_books.html', {
             'books': Book.objects.filter(rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
         })
-    else:
-        return render(request, 'book/ranked_books.html', {
-            'books': Book.objects.filter(rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank'),
-        })
+
+    day = int(day)
+    days_ago = date.today() - timedelta(days=day)
+
+    ranks = Rank.objects.filter(date=days_ago).order_by('rank').select_related()
+
+    return render(request, 'book/ranked_books.html', {
+        'ranks': ranks,
+        'day': day
+    })
 
 
 def add_book(request, isbn):

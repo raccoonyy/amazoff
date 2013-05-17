@@ -2,6 +2,7 @@
 from django.db import models
 
 # from django.db.models.signals import post_save
+from datetime import date, timedelta
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from actstream import action
@@ -115,6 +116,10 @@ class Book(models.Model):
             return self.rank_set.order_by('rank')[0]
         else:
             return False
+
+    @property
+    def today_rank(self):
+        return self.rank_set.get(date=date.today())
 
     @property
     def amazon_link(self):

@@ -16,12 +16,10 @@
     <a href="{% url 'ranked_books' 0 %}">오늘 순위</a></li>
 </ul>
 
-{% paginate ranks %}
+{% paginate books %}
 <ul>
-{% for rank in ranks %}
-  {% with book=rank.book  %}
-    {% include 'book/_saved_book.html' %}
-  {% endwith %}
+{% for book in books %}
+  {% include 'book/_saved_book.html' %}
 {% endfor %}
 </ul>
 {% show_pages %}
