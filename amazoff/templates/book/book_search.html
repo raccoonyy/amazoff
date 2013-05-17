@@ -18,7 +18,7 @@
   </form>
   {% if books %}
     {% load endless %}
-    <ol class="unstyled">
+    <ul class="unstyled">
       {% paginate books %}
       {% for book in books %}
         {% if search_in_amazon %}
@@ -27,9 +27,8 @@
           {% include "book/_saved_book.html" %}
         {% endif %}
       {% endfor %}
-    </ol>
+    </ul>
     {% show_pages %}
-
   {% else %}
     <img src="{{ STATIC_URL }}img/amazon_code.png" alt="">
   {% endif %}

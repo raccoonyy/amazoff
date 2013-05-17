@@ -2,10 +2,13 @@
 {% load i18n %}
 {% block extra_info %}
 <div class="extra-info">
-  <p>등록된 날짜 -  {{book.create_date}} | 
+  <p>
+  {% if book.today_rank %}
+    오늘 순위 - {{ book.today_rank }} |
+  {% endif %}
   {% if book.highest_rank %}
     최고 순위 - {{ book.highest_rank }}</p>
   {% endif %}
-  <p>{{ action.verb }}</p>
+  <p>등록된 날짜 -  {{ book.create_date }} |</p>
 </div>
 {% endblock extra_info %}

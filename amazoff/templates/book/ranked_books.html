@@ -17,7 +17,7 @@
 </ul>
 
 {% paginate ranks %}
-<ul>
+<ul class="unstyled">
 {% for rank in ranks %}
   {% with book=rank.book  %}
     {% include 'book/_saved_book.html' %}

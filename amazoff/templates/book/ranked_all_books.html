@@ -17,7 +17,7 @@
 </ul>
 
 {% paginate books %}
-<ul>
+<ul class="unstyled">
 {% for book in books %}
   {% include 'book/_saved_book.html' %}
 {% endfor %}

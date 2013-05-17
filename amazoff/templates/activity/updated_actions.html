@@ -4,7 +4,7 @@
 
 {% block page_title %}업데이트된 책{% endblock page_title %}
 {% block content %}
-<ul>
+<ul class="unstyled">
 {% paginate action_list %}
 {% for action in action_list %}
     {% with book=action.actor %}
