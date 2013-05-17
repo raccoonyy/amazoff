@@ -2,16 +2,13 @@
 {% load i18n %}
 {% block extra_info %}
 <div class="extra-info">
-  <p>등록된 날짜 -  {{ book.create_date }} | 
-  {% if day == 0 %}
-    {% if book.today_rank %}
-      오늘 순위 - {{ book.today_rank }} |
-    {% endif %}
+  <p>
+  {% if book.today_rank %}
+    오늘 순위 - {{ book.today_rank }} |
   {% endif %}
-  {% if day == all %}
-    {% if book.highest_rank %}
-      최고 순위 - {{ book.highest_rank }}</p>
-    {% endif %}
+  {% if book.highest_rank %}
+    최고 순위 - {{ book.highest_rank }}</p>
   {% endif %}
+  <p>등록된 날짜 -  {{ book.create_date }} |</p>
 </div>
 {% endblock extra_info %}
