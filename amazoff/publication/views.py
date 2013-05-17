@@ -134,7 +134,7 @@ def book_search_in_amazon(request):
         query_string = request.GET['q']
 
         amazon = AmazonAPI(settings.AMAZON_ACCESS_KEY, settings.AMAZON_SECRET_KEY, settings.AMAZON_ASSOC_TAG)
-        amazon_books = amazon.search_n(20, Keywords=query_string, SearchIndex='Books', BrowseNode='5', Sort='daterank')
+        amazon_books = amazon.search_n(40, Keywords=query_string, SearchIndex='Books', BrowseNode='5', Sort='daterank')
 
         books = []
         for amazon_book in amazon_books:
