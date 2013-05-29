@@ -192,7 +192,8 @@ THIRD_PARTY_APPS = (
     'compressor',
     'django_extensions',
     'actstream',
-    'endless_pagination'
+    'endless_pagination',
+    'sysmon',
 )
 
 # Apps specific for this project go here.
