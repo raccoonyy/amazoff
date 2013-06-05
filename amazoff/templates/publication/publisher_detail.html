@@ -6,9 +6,22 @@
 
 {% block content %}
 <ul class="nav nav-pills">
-    <li><a href="{% url 'publisher' pk=publisher.pk order='title' %}">알파벳 순</a></li>
-    <li><a href="{% url 'publisher' pk=publisher.pk order='rank' %}">순위 순</a></li>
-    <li><a href="{% url 'publisher' pk=publisher.pk order='publication_date' %}">발행일 순</a></li>
+    <li {% if order == 'title' %}
+        class="active"
+    {% endif %}
+    >
+        <a href="{% url 'publisher' pk=publisher.pk order='title' %}">알파벳 순</a>
+    </li>
+    <li {% if order == 'rank' %}
+    class="active"
+  {% endif %}>
+        <a href="{% url 'publisher' pk=publisher.pk order='rank' %}">순위 순</a>
+    </li>
+    <li {% if order == 'publication_date' %}
+    class="active"
+  {% endif %}>
+        <a href="{% url 'publisher' pk=publisher.pk order='publication_date' %}">발행일 순</a>
+    </li>
 </ul>
 
 <ul class="unstyled">

@@ -58,11 +58,14 @@ class PublisherDetail(DetailView):
         order = 'title'
         if 'order' in self.kwargs:
             order = self.kwargs['order']
-        if order == 'title' or order == 'publication_date':
-            context['book_list'] = Book.objects.filter(publisher=self.object).order_by(order)
+        if order == 'title':
+            context['book_list'] = Book.objects.filter(publisher=self.object).order_by('title')
+        if order == 'publication_date':
+            context['book_list'] = Book.objects.filter(publisher=self.object).order_by('-publication_date')
         if order == 'rank':
             context['book_list'] = Book.objects.filter(publisher=self.object, rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank')
 
+        context['order'] = order
         context['publisher'] = self.object
         context['publishers'] = Publisher.objects.all()
 
