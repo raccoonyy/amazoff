@@ -8,7 +8,7 @@
     <meta name="author" content="">
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9"> <!-- for IE10 -->
 	<link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico" type="image/x-icon"  />
-	
+
     <!-- Le styles -->
     <link href="{{ STATIC_URL }}apps/chosen/chosen.css" rel="stylesheet">
 
@@ -21,7 +21,7 @@
     <link href="{{ STATIC_URL }}css/project.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Use this to quickly test CSS changes in a template, 
+    <!-- Use this to quickly test CSS changes in a template,
         then move to project.css -->
     {% block extra_css %}{% endblock extra_css %}
   </head>
@@ -36,10 +36,13 @@
             <div class="nav-collapse collapse">
               <ul class="nav">
                 <li>
-                  <a href="{% url 'book_search' %}">Search</a> 
+                  <a href="{% url 'book_search' %}">Search</a>
                 </li>
                 <li>
-                  <a href="{% url 'new_books' %}">새로 등록된 책</a> 
+                  <a href="{% url 'new_books' %}">새로 등록된 책</a>
+                </li>
+                <li>
+                  <a href="{% url 'publishers' %}">출판사별</a>
                 </li>
                 <li>
                   <a href="{% url 'updated_books' %}">업데이트된 책</a>
@@ -53,7 +56,7 @@
         </div>
       </div>
 	  </header>
-	  
+
 	  <section class="contents">
 		<h1>
       {% block page_title %}{% endblock page_title %}
@@ -61,14 +64,14 @@
 		{% block content %}
   	{% endblock content %}
 	  </section>
-	  
+
 	  <aside class="base">
 	  </aside>
-	  
+
 	  <footer class="base">
       <p>...</p>
 	  </footer>
-	  
+
     </div>
     <!-- Le javascript
     ================================================== -->

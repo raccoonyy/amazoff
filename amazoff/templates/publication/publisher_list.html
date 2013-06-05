@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load activity_tags i18n %}
+{% load endless %}
+
+{% block page_title %}출판사 목록{% endblock page_title %}
+{% block content %}
+
+<ul class="unstyled">
+{% for publisher in publishers %}
+  <li>
+    <a href="{{ publisher.get_absolute_url }}">{{ publisher.name }}</a> ({{ publisher.book_count }})
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

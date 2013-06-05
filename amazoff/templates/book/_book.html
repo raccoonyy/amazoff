@@ -15,10 +15,10 @@
       <p>
       {% for author in book.author.all %}
         {{ author.name }}
-      {% endfor %} | 
+      {% endfor %} |
       {% for pub in book.publisher.all %}
-        {{ pub.name }}
-      {% endfor %} | 
+        <a href="{{ pub.get_absolute_url }}">{{ pub.name }}</a>
+      {% endfor %} |
       {{ book.publication_date }} | {{ book.pages }}쪽 |
       {{ book.isbn }}</p>
     </div>

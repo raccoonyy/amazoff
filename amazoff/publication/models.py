@@ -42,8 +42,15 @@ class Publisher(models.Model):
         verbose_name = 'Publisher'
         verbose_name_plural = 'Publishers'
 
+    def get_absolute_url(self):
+        return reverse('publisher', args=[self.pk])
+
     def __unicode__(self):
         return self.name
+
+    @property
+    def book_count(self):
+        return self.book_set.count()
 
 
 class BookManager(models.Manager):
@@ -64,7 +71,7 @@ class BookManager(models.Manager):
 
         streams = User.objects.get(username='streams')
         created_streams = User.objects.get(username='created_streams')
-        action.send(dbbook, verb='is creating',
+        action.send(dbbook, verb='is creating',\
             target=streams, action_object=created_streams)
 
     def trans_amazon_to_book(self, amazon_book):

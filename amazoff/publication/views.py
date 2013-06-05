@@ -5,19 +5,19 @@ from actstream.models import action_object_stream
 # from actstream.models import model_stream
 from amazon.api import AmazonAPI
 from datetime import date, timedelta
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
+# from django.core.urlresolvers import reverse
 from django.db.models import Min, Count
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-# from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
-from publication.models import *
-from publication.views import *
+from django.views.generic import ListView, DetailView
+from publication.models import Author, Book, Publisher, Rank
 
 
 # def main(request):
@@ -34,6 +34,53 @@ def main(request):
     """
 
     return redirect('/books/')
+
+
+class BookList(ListView):
+    queryset = Book.objects.order_by('-publication_date')
+    context_object_name = 'book_list'
+
+
+class PublisherList(ListView):
+    model = Publisher
+    context_object_name = 'publishers'
+    queryset = Publisher.objects.order_by('name')
+
+
+class PublisherDetail(DetailView):
+    model = Publisher
+    queryset = Publisher.objects.all()
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(PublisherDetail, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        order = 'title'
+        if 'order' in self.kwargs:
+            order = self.kwargs['order']
+        if order == 'title' or order == 'publication_date':
+            context['book_list'] = Book.objects.filter(publisher=self.object).order_by(order)
+        if order == 'rank':
+            context['book_list'] = Book.objects.filter(publisher=self.object, rank__isnull=False).annotate(min_rank=Min('rank__rank')).order_by('min_rank')
+
+        context['publisher'] = self.object
+        context['publishers'] = Publisher.objects.all()
+
+        return context
+
+
+class PublisherBookList(ListView):
+    template_name = 'books/books_by_publisher.html'
+
+    def get_queryset(self):
+        self.publisher = get_object_or_404(Publisher, name=self.args[0])
+        return Book.objects.filter(publisher=self.publisher)
+
+    def get_context_data(self, **kwargs):
+        context = super(PublisherBookList, self).get_context_data(**kwargs)
+        context['publisher'] = self.publisher
+        context['publishers'] = Publisher.objects.all()
+        return context
 
 
 def books(request):

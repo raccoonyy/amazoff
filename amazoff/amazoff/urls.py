@@ -31,6 +31,9 @@ urlpatterns = patterns(
     url(r'^book/add/(?P<isbn>\d{9}[\d|X])/$', add_book, name='add_book'),
     url(r'^book/add/(?P<isbn>\d{12}[\d|X])/$', add_book, name='add_book'),
     url(r'^book/search/$', book_search, name='book_search'),
+    url(r'^publishers/$', PublisherList.as_view(), name='publishers'),
+    url(r'^publisher/(?P<pk>\d+)/$', PublisherDetail.as_view(), name='publisher'),
+    url(r'^publisher/(?P<pk>\d+)/order_by_(?P<order>\w+)/$', PublisherDetail.as_view(), name='publisher'),
 
     ('^activity/', include('actstream.urls')),
     url(r'^admin/', include(admin.site.urls)),

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load endless %}
+{% load static %}
+
+{% block page_title %}{{ publisher.name}} - 도서 목록{% endblock page_title %}
+
+{% block content %}
+<ul class="nav nav-pills">
+    <li><a href="{% url 'publisher' self.pk title %}">알파벳 순</a></li>
+    <li><a href="">순위 순</a></li>
+    <li><a href="">발행일 순</a></li>
+</ul>
+{% paginate book_list %}
+<ul class="unstyled">
+  {% for book in book_list %}
+    {% include "book/_saved_book.html" %}
+  {% endfor %}
+</ul>
+{% show_pages %}
+{% endblock %}

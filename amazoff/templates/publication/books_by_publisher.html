@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load activity_tags i18n %}
+{% load endless %}
+
+{% block page_title %}출판사의 책{% endblock page_title %}
+{% block content %}
+<ul class="nav nav-pills">
+  {% for pub in publishers %}
+    <li {% if pub == publisher %}
+      class="active"
+    {% endif %}
+    >
+      <a href="{% url 'publisher_books' pub.name %}">{{ pub.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+{% paginate ranks %}
+<ul class="unstyled">
+{% for rank in ranks %}
+  {% with book=rank.book  %}
+    {% include 'book/_saved_book.html' %}
+  {% endwith %}
+{% endfor %}
+</ul>
+{% show_pages %}
+{% endblock %}

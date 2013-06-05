@@ -24,7 +24,7 @@
         {{ author.name }}
        {% endfor %}
      | {% for pub in book.publisher.all %}
-        {{ pub.name }}       
+        <a href="{{ pub.get_absolute_url }}">{{ pub.name }}</a>
        {% endfor %}
      | {{ book.publication_date }} | {{ book.pages }}쪽</p>
   </div>
